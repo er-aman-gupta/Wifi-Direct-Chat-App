@@ -2,6 +2,7 @@ package com.example.bluetoothchatapp;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.wifi.WifiManager;
 import android.net.wifi.p2p.WifiP2pConfig;
@@ -30,14 +31,13 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-    Button enWIFIbtn,discoverbtn,sendbtn;
-    EditText writemsg;
+    Button enWIFIbtn,discoverbtn;
     TextView constate,readmsg;
     ListView listView;
 
-    WifiManager wifiManager;
+    static WifiManager wifiManager;
     WifiP2pManager wifiP2pManager;
-    WifiP2pManager.Channel channel;
+    static WifiP2pManager.Channel channel;
     BroadcastReceiver broadcastReceiver;
     IntentFilter intentFilter;
 
@@ -46,10 +46,11 @@ public class MainActivity extends AppCompatActivity {
     WifiP2pDevice devicearray[];
 
     static Handler handler;
+    static WifiP2pDevice wifiP2pDevice;
 
-    static Server_Side_Thread serverSideThread;
-    static Client_Thread clientThread;
-    static SendReceiveThread sendReceiveThread;
+    static public Server_Side_Thread serverSideThread;
+    static public Client_Thread clientThread;
+    static public SendReceiveThread sendReceiveThread;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,13 +78,7 @@ public class MainActivity extends AppCompatActivity {
                 });
             }
         });
-        sendbtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String m=writemsg.getText().toString();
-                sendReceiveThread.write(m.getBytes());
-            }
-        });
+
         enWIFIbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -103,10 +98,9 @@ public class MainActivity extends AppCompatActivity {
     {
         enWIFIbtn=findViewById(R.id.WIFIButton);
         discoverbtn=findViewById(R.id.discoverbtn);
-        sendbtn=findViewById(R.id.sendButton);
-        writemsg=findViewById(R.id.writeMsg);
+
         constate=findViewById(R.id.connectionStatus);
-        readmsg=findViewById(R.id.readMsg);
+
         listView=findViewById(R.id.peerListView);
         wifiManager= (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
 
@@ -130,20 +124,8 @@ public class MainActivity extends AppCompatActivity {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
-                WifiP2pDevice wifiP2pDevice=devicearray[position];
-                WifiP2pConfig config=new WifiP2pConfig();
-                config.deviceAddress=wifiP2pDevice.deviceAddress;
-                wifiP2pManager.connect(channel, config, new WifiP2pManager.ActionListener() {
-                    @Override
-                    public void onSuccess() {
-                        Toast.makeText(MainActivity.this,"Connected to "+devicesName[position],Toast.LENGTH_SHORT).show();
-                    }
-
-                    @Override
-                    public void onFailure(int reason) {
-                        Toast.makeText(MainActivity.this,"Connection failed "+reason,Toast.LENGTH_SHORT).show();
-                    }
-                });
+                wifiP2pDevice=devicearray[position];
+                makeConnection(wifiP2pDevice);
 
             }
         });
@@ -155,13 +137,31 @@ public class MainActivity extends AppCompatActivity {
                 {
                     byte[] readBuff= (byte[]) msg.obj;
                     String temp=new String(readBuff,0,msg.arg1);
-                    readmsg.setText(temp);
+                    DataClass dataClass=new DataClass(temp,false);
+                    ChatActivity.arrayList.add(dataClass);
+                    ChatActivity.customAdapter.notifyDataSetChanged();
                 }
                 return true;
             }
         });
     }
 
+    void makeConnection(WifiP2pDevice wifiP2pDevice)
+    {
+        WifiP2pConfig config=new WifiP2pConfig();
+        config.deviceAddress=wifiP2pDevice.deviceAddress;
+        wifiP2pManager.connect(channel, config, new WifiP2pManager.ActionListener() {
+            @Override
+            public void onSuccess() {
+                Toast.makeText(MainActivity.this,"Connected",Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onFailure(int reason) {
+                Toast.makeText(MainActivity.this,"Connection failed "+reason,Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
 
     //Listener for Peerdevices discovery
     WifiP2pManager.PeerListListener peerListListener=new WifiP2pManager.PeerListListener() {
@@ -200,13 +200,18 @@ public class MainActivity extends AppCompatActivity {
                 Log.d("Reached"," Here 1");
                 serverSideThread=new Server_Side_Thread();
                 serverSideThread.start();
+                Intent intent=new Intent(MainActivity.this,ChatActivity.class);
+                startActivity(intent);
             }
             else if(info.groupFormed) {
                 constate.setText("Client");
                 Log.d("Reached"," Here 2");
                 clientThread=new Client_Thread(inetAddress);
                 clientThread.start();
+                Intent intent=new Intent(MainActivity.this,ChatActivity.class);
+                startActivity(intent);
             }
+
         }
     };
 
