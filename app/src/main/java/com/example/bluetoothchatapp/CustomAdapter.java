@@ -42,6 +42,8 @@ public class CustomAdapter extends BaseAdapter {
             View view=View.inflate(context,R.layout.lay2,null);
             TextView textView=view.findViewById(R.id.senderTextId);
             textView.setText(dataClass.s);
+            view.setBackgroundResource(R.drawable.chatlay);
+
             return view;
         }
         else

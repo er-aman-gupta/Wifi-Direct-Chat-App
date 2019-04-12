@@ -2,20 +2,22 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@drawable/chatlay">
 
     <android.support.v7.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:cardCornerRadius="10dp"
-        app:cardBackgroundColor="#93a3bc"
         android:elevation="15dp"
+        android:background="@drawable/chatlay"
         android:layout_margin="10dp">
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/senderTextId"
             android:gravity="end"
+            android:background="@drawable/chatlay"
             android:textSize="25dp"
             android:text="Could not recieve"
             android:layout_margin="6dp"

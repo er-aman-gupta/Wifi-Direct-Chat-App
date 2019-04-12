@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.net.NetworkInfo;
+import android.net.wifi.p2p.WifiP2pGroup;
 import android.net.wifi.p2p.WifiP2pManager;
 import android.widget.Toast;
 
@@ -28,6 +29,14 @@ public class Wifi_P2P_Broadcast_Receiver extends BroadcastReceiver {
             if(wifiP2pManager==null)
             {
                 return;
+            }
+            try{
+            WifiP2pGroup wifiP2pGroup=intent.getParcelableExtra(WifiP2pManager.EXTRA_WIFI_P2P_GROUP);
+            if(wifiP2pGroup!=null&&wifiP2pGroup.getOwner()!=null&wifiP2pGroup.getOwner().deviceName!=null)
+            MainActivity.connectedDeviceName=wifiP2pGroup.getOwner().deviceName;}
+            catch (Exception e)
+            {
+
             }
             NetworkInfo networkInfo=intent.getParcelableExtra(WifiP2pManager.EXTRA_NETWORK_INFO);
             if(networkInfo.isConnected())

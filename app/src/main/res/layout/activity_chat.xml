@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ChatActivity">
+    tools:context=".ChatActivity"
+    android:background="@drawable/background1">
 
     <ListView
         android:layout_width="match_parent"
@@ -30,5 +31,6 @@
         android:text="SEND"
         android:id="@+id/sendButton"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true"/>
+        android:layout_alignParentEnd="true"
+        android:background="@drawable/buttondesign"/>
 </RelativeLayout>

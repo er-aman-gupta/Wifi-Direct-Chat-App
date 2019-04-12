@@ -1,7 +1,9 @@
 
 package com.example.bluetoothchatapp;
 
+import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -20,6 +22,7 @@ public class ChatActivity extends AppCompatActivity {
     ListView listView;
     static ArrayList<DataClass> arrayList=new ArrayList<>();
     static CustomAdapter customAdapter;
+    static DBHelper dbHelper;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -30,6 +33,33 @@ public class ChatActivity extends AppCompatActivity {
         listView=findViewById(R.id.chatList);
         customAdapter=new CustomAdapter(ChatActivity.this, arrayList);
         listView.setAdapter(customAdapter);
+
+        MainActivity.connectedDeviceName=MainActivity.connectedDeviceName.substring(MainActivity.connectedDeviceName.lastIndexOf(']')+1);
+        String tmp[]=MainActivity.connectedDeviceName.split(" ");
+        MainActivity.connectedDeviceName="";
+        for (String c:tmp)
+        {
+            MainActivity.connectedDeviceName+=c;
+        }
+        arrayList.add(new DataClass(MainActivity.connectedDeviceName,true));
+        dbHelper=new DBHelper(ChatActivity.this);
+
+        //Load Previous Chats
+        Cursor cursor=dbHelper.readData();
+        while (cursor.moveToNext())
+        {
+            String t=cursor.getString(0);
+            boolean who;
+            if(Integer.parseInt(cursor.getString(1))==1)
+            {
+                who=false;
+            }
+            else who=true;
+            DataClass dataClass=new DataClass(t,who);
+            arrayList.add(dataClass);
+        }
+        customAdapter.notifyDataSetChanged();
+
         sendbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -46,10 +76,33 @@ public class ChatActivity extends AppCompatActivity {
                     arrayList.add(dataClass);
                     customAdapter.notifyDataSetChanged();
                     writemsg.setText("");
+                    ContentValues contentValues=new ContentValues();
+                    contentValues.put(DBHelper.colName[0],m);
+                    contentValues.put(DBHelper.colName[1],0);
+                    if(dbHelper.insertDB(contentValues))
+                    {
+
+                        Cursor cursor=dbHelper.readData();
+                        String temp="";
+                        while (cursor.moveToNext())
+                        {
+                            temp+=cursor.getString(0)+" "+cursor.getString(1)+"\n";
+                        }
+                        Toast.makeText(ChatActivity.this,temp,Toast.LENGTH_LONG).show();
+                    }
+                    else
+                    {
+                        Toast.makeText(ChatActivity.this,"Not DONE",Toast.LENGTH_LONG).show();
+                    }
                 }
                /* InputMethodManager imm =(InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.hideSoftInputFromWindow(v.getWindowToken(), 0);*/
             }
         });
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
     }
 }

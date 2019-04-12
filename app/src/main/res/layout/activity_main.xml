@@ -5,7 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".MainActivity">
+    tools:context=".MainActivity"
+    android:background="@drawable/background1">
 
     <TextView
         android:id="@+id/connectionStatus"
@@ -14,7 +15,7 @@
         android:layout_marginTop="15dp"
         android:text="Connection Status"
         android:textAlignment="center"
-        android:textColor="@android:color/holo_blue_dark"
+        android:textColor="#000000"
         android:textSize="18sp"
         android:textStyle="italic" />
 
@@ -22,6 +23,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
+        android:padding="20dp"
         android:weightSum="2">
 
         <Button
@@ -29,7 +31,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-
+            android:layout_margin="20dp"
+            android:background="@drawable/buttondesign"
             android:text="Turn Wifi On" />
 
         <Button
@@ -37,6 +40,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:layout_margin="20dp"
+            android:background="@drawable/buttondesign"
             android:text="discover"
             />
 
@@ -48,7 +53,7 @@
         android:layout_width="match_parent"
         android:layout_height="200dp"
         android:layout_marginTop="25dp"
-        android:background="@android:color/holo_orange_light" />
+         />
 
   <!--  <TextView
         android:id="@+id/readMsg"
