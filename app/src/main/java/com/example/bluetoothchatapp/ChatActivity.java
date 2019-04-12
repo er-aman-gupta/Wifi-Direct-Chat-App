@@ -41,7 +41,6 @@ public class ChatActivity extends AppCompatActivity {
         {
             MainActivity.connectedDeviceName+=c;
         }
-        arrayList.add(new DataClass(MainActivity.connectedDeviceName,true));
         dbHelper=new DBHelper(ChatActivity.this);
 
         //Load Previous Chats
@@ -82,13 +81,6 @@ public class ChatActivity extends AppCompatActivity {
                     if(dbHelper.insertDB(contentValues))
                     {
 
-                        Cursor cursor=dbHelper.readData();
-                        String temp="";
-                        while (cursor.moveToNext())
-                        {
-                            temp+=cursor.getString(0)+" "+cursor.getString(1)+"\n";
-                        }
-                        Toast.makeText(ChatActivity.this,temp,Toast.LENGTH_LONG).show();
                     }
                     else
                     {
@@ -104,5 +96,8 @@ public class ChatActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        MainActivity.sendReceiveThread = null;
+        MainActivity.clientThread = null;
+        MainActivity.serverSideThread = null;
     }
 }

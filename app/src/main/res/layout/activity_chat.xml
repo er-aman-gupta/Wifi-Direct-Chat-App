@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ChatActivity"
-    android:background="@drawable/background1">
+    android:background="@drawable/backgrounddegisn">
 
     <ListView
         android:layout_width="match_parent"
@@ -21,13 +21,16 @@
 
     <EditText
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="40dp"
         android:layout_alignParentBottom="true"
         android:id="@+id/writeMsg"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:background="@drawable/chatlay"
         android:layout_toStartOf="@id/sendButton"/>
     <Button
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="40dp"
         android:text="SEND"
         android:id="@+id/sendButton"
         android:layout_alignParentBottom="true"
