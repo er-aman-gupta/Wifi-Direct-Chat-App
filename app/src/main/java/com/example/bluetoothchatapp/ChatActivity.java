@@ -12,10 +12,13 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
+import static org.junit.Assert.*;
+import org.junit.Test;
 
 import java.util.ArrayList;
 
 public class ChatActivity extends AppCompatActivity {
+
 
     Button sendbtn;
     EditText writemsg;

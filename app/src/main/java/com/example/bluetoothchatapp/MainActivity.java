@@ -37,9 +37,14 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.junit.Test;
+
 import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.List;
+
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
 public class MainActivity extends AppCompatActivity {
 
