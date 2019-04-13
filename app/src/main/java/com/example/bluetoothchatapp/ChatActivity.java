@@ -6,6 +6,8 @@ import android.content.Context;
 import android.database.Cursor;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
@@ -22,9 +24,9 @@ public class ChatActivity extends AppCompatActivity {
 
     Button sendbtn;
     EditText writemsg;
-    ListView listView;
+    RecyclerView listView;
     static ArrayList<DataClass> arrayList=new ArrayList<>();
-    static CustomAdapter customAdapter;
+    static RecycleViewAdapetr customAdapter;
     static DBHelper dbHelper;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,8 +36,7 @@ public class ChatActivity extends AppCompatActivity {
         sendbtn=findViewById(R.id.sendButton);
         writemsg=findViewById(R.id.writeMsg);
         listView=findViewById(R.id.chatList);
-        customAdapter=new CustomAdapter(ChatActivity.this, arrayList);
-        listView.setAdapter(customAdapter);
+
 
         MainActivity.connectedDeviceName=MainActivity.connectedDeviceName.substring(MainActivity.connectedDeviceName.lastIndexOf(']')+1);
         String tmp[]=MainActivity.connectedDeviceName.split(" ");
@@ -60,8 +61,9 @@ public class ChatActivity extends AppCompatActivity {
             DataClass dataClass=new DataClass(t,who);
             arrayList.add(dataClass);
         }
-        customAdapter.notifyDataSetChanged();
-
+        customAdapter=new RecycleViewAdapetr(ChatActivity.this, arrayList);
+        listView.setAdapter(customAdapter);
+        listView.setLayoutManager(new LinearLayoutManager(this));
         sendbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
